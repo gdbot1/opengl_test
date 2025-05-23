@@ -6,23 +6,8 @@
 
 using namespace std;
 
-const char* vertData = R"(
-#version 330 core
-layout(location = 0) in vec3 aPos;
-void main() {
-    gl_Position = vec4(aPos, 1.0);
-}
-)";
-
-const char* fragData = R"(
-#version 330 core
-out vec4 FragColor;
-void main() {
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Красный
-}
-)";
-
 int createShaderProgram(const char* vert, const char* frag); 
+char* getShaderData(const string& path); 
 
 int main () {
     if (!glfwInit()) {
@@ -46,6 +31,11 @@ int main () {
         cout << "FATAL ERROR: glad not inited" << endl;
         return -1;
     }
+    
+    const char* vertData = getShaderData("../shaders/test.vert");
+    const char* fragData = getShaderData("../shaders/test.frag");
+
+    cout << vertData << endl;
 
     int program = createShaderProgram(vertData, fragData);
 
@@ -109,7 +99,7 @@ int createShaderProgram(const char* vert, const char* frag) {
     return program;
 }
 
-char* getShaderData(string& path) {
+char* getShaderData(const string& path) {
     ifstream file(path, ios::binary | ios::ate);//открыть в бинарном режиме + курсор в конце (ate = at end)
     
     if (!file.is_open()) {
@@ -120,7 +110,7 @@ char* getShaderData(string& path) {
     streamsize file_size = file.tellg();//получить текущую позицию (так-как файл был открыт с конца, то позиция будет равна длине файла)
     file.seekg(0, ios::beg);//установка курсора в начале. 0 - это позиция относительно начала файла (begin)
 
-    char* buffer = new char[file_size + 1];
+    char* buffer = new char[file_size + 2];//для \0 и ещё 1 символа, который удаляется при смещении
     if (!file.read(buffer, file_size)) {
 	cout << "FATAL ERROR: file can't be readen" << endl;
 	
@@ -128,7 +118,7 @@ char* getShaderData(string& path) {
 	return nullptr;
     }
     
-    buffer[file_size - 1] = '\0';
+    buffer[file_size] = '\0';
 
     return buffer;
 
