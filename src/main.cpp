@@ -4,10 +4,13 @@
 #include <string>
 #include <fstream>
 
+#include "vao.cpp"
+
 using namespace std;
 
 int createShaderProgram(const char* vert, const char* frag); 
 char* getShaderData(const string& path); 
+void checkShaderLog(unsigned int shader);
 
 int main () {
     if (!glfwInit()) {
@@ -27,6 +30,8 @@ int main () {
 
     glfwMakeContextCurrent(window);
 
+    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
     if (!gladLoadGL()) {
         cout << "FATAL ERROR: glad not inited" << endl;
         return -1;
@@ -37,45 +42,51 @@ int main () {
 
     cout << vertData << endl;
 
+    cout << fragData << endl;
+
     int program = createShaderProgram(vertData, fragData);
 
     glUseProgram(program);
-
-    glClearColor(0, 0, 0, 1);
     
     float theta = 0;
+
+    //vertex vbo
+    vector<float> vertices = {
+	-1, 0,
+	0, 1,
+	1, 0
+    };
+    
+    auto vertex_vbo = make_shared<VBO>(vertices, 2);
+
+    //color vbo
+    vector<float> colors = {
+	1, 0, 0,
+	0, 1, 0,
+	0, 0, 1
+    };
+    
+    auto color_vbo = make_shared<VBO>(colors, 3);
+
+    //vao
+    VAO vao({vertex_vbo, color_vbo}, vertex_vbo->getLength());
     
     while (!glfwWindowShouldClose(window)) {
 	theta++;
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-	glPushMatrix();
+	vao.draw();
 
-	glRotatef(theta, 0, 0, 1);
-        
-	glBegin(GL_TRIANGLES);
-	
-	glColor3f(1, 0, 0);
-	glVertex2f(-1, 0);
-	
-	glColor3f(0, 1, 0);
-	glVertex2f(0, 1);
-	
-	glColor3f(0, 0, 1);
-	glVertex2f(1, 0);
-
-	glEnd();	
-
-	glPopMatrix();
-
-        glfwSwapBuffers(window);   
-	glfwPollEvents();     
+	glfwPollEvents();
+        glfwSwapBuffers(window);
     }
 
     glfwTerminate();
 
-    cout << "Hello world" << endl;
+    delete[] vertData;
+    delete[] fragData;
+
     return 0;
 }
 
@@ -85,10 +96,14 @@ int createShaderProgram(const char* vert, const char* frag) {
     glShaderSource(vertShader, 1, &vert, nullptr);
     glCompileShader(vertShader);
 
+    checkShaderLog(vertShader);
+
     unsigned int fragShader = glCreateShader(GL_FRAGMENT_SHADER);
     
     glShaderSource(fragShader, 1, &frag, nullptr);
     glCompileShader(fragShader);
+
+    checkShaderLog(fragShader);
 
     unsigned int program = glCreateProgram();
 
@@ -97,6 +112,18 @@ int createShaderProgram(const char* vert, const char* frag) {
     glLinkProgram(program);
 
     return program;
+}
+
+void checkShaderLog(unsigned int shader) {
+    GLint success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        // Получение лога ошибки
+        char infoLog[512];
+        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
 }
 
 char* getShaderData(const string& path) {
@@ -121,5 +148,4 @@ char* getShaderData(const string& path) {
     buffer[file_size] = '\0';
 
     return buffer;
-
 }
