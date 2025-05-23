@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -106,4 +107,29 @@ int createShaderProgram(const char* vert, const char* frag) {
     glLinkProgram(program);
 
     return program;
+}
+
+char* getShaderData(string& path) {
+    ifstream file(path, ios::binary | ios::ate);//открыть в бинарном режиме + курсор в конце (ate = at end)
+    
+    if (!file.is_open()) {
+	cout << "FATAL ERROR: shader file can't be opened" << endl;
+	return nullptr;
+    }
+
+    streamsize file_size = file.tellg();//получить текущую позицию (так-как файл был открыт с конца, то позиция будет равна длине файла)
+    file.seekg(0, ios::beg);//установка курсора в начале. 0 - это позиция относительно начала файла (begin)
+
+    char* buffer = new char[file_size + 1];
+    if (!file.read(buffer, file_size)) {
+	cout << "FATAL ERROR: file can't be readen" << endl;
+	
+	delete[] buffer;//удаление баффера
+	return nullptr;
+    }
+    
+    buffer[file_size - 1] = '\0';
+
+    return buffer;
+
 }
