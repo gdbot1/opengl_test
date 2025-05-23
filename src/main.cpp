@@ -1,8 +1,27 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <string>
 
 using namespace std;
+
+const char* vertData = R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+void main() {
+    gl_Position = vec4(aPos, 1.0);
+}
+)";
+
+const char* fragData = R"(
+#version 330 core
+out vec4 FragColor;
+void main() {
+    FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Красный
+}
+)";
+
+int createShaderProgram(const char* vert, const char* frag); 
 
 int main () {
     if (!glfwInit()) {
@@ -26,6 +45,10 @@ int main () {
         cout << "FATAL ERROR: glad not inited" << endl;
         return -1;
     }
+
+    int program = createShaderProgram(vertData, fragData);
+
+    glUseProgram(program);
 
     glClearColor(0, 0, 0, 1);
     
@@ -63,4 +86,24 @@ int main () {
 
     cout << "Hello world" << endl;
     return 0;
+}
+
+int createShaderProgram(const char* vert, const char* frag) {
+    unsigned int vertShader = glCreateShader(GL_VERTEX_SHADER);
+    
+    glShaderSource(vertShader, 1, &vert, nullptr);
+    glCompileShader(vertShader);
+
+    unsigned int fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+    
+    glShaderSource(fragShader, 1, &frag, nullptr);
+    glCompileShader(fragShader);
+
+    unsigned int program = glCreateProgram();
+
+    glAttachShader(program, vertShader);
+    glAttachShader(program, fragShader);
+    glLinkProgram(program);
+
+    return program;
 }
