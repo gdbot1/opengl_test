@@ -4,7 +4,7 @@ set(project_name "OPENGL")
 
 project(${project_name})
 
-add_executable(${project_name} src/main.cpp)
+add_executable(${project_name} src/main.cpp src/vbo.cpp src/vao.cpp src/circle.cpp)
 
 add_subdirectory(libs/glfw)
 

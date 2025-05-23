@@ -1,71 +1,64 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <vector>
-
-#include "vbo.cpp"
+#include "vao.h"
 
 using namespace std;
 
-class VAO {
-public:
-    VAO(const vector<shared_ptr<VBO>>& vbos, int length) {
-	this->vao = createVAO(vbos);
-	this->length = length;
+VAO::VAO() {
 
-	cout << "length:" << length << endl;
+}
+
+VAO::VAO(vector<shared_ptr<VBO>>& vbos, int length) {
+    this->vao = createVAO(vbos);
+    this->length = length;
+
+    cout << "length:" << length << endl;
+}
+
+VAO::~VAO() {
+    destroy();
+}
+
+GLuint VAO::createVAO(vector<shared_ptr<VBO>> &vbos) {
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    
+    for (int i = 0; i < vbos.size(); i++) {
+	glBindBuffer(GL_ARRAY_BUFFER, vbos[i]->getVBO());
+	glVertexAttribPointer(i, vbos[i]->getSize(), GL_FLOAT, GL_FALSE, vbos[i]->getSize() * sizeof(float), nullptr);
+	glEnableVertexAttribArray(i);
     }
-
-    ~VAO() {
-	destroy();
-    }
-
-    GLuint createVAO(const vector<shared_ptr<VBO>> &vbos) {
-        GLuint vao;
-        glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	for (int i = 0; i < vbos.size(); i++) {
-	    glBindBuffer(GL_ARRAY_BUFFER, vbos[i]->getVBO());
-	    glVertexAttribPointer(i, vbos[i]->getSize(), GL_FLOAT, GL_FALSE, vbos[i]->getSize() * sizeof(float), nullptr);
-	    glEnableVertexAttribArray(i);
-	}
 	
-	glBindVertexArray(0);
+    glBindVertexArray(0);
 
-	cout << "Created VAO: " << vao << endl; 
+    cout << "Created VAO: " << vao << endl; 
 
-	return vao;
-    }
+    return vao;
+}
 
-    GLuint getVAO() {
-	return this->vao;
-    }
+GLuint VAO::getVAO() {
+    return this->vao;
+}
 
-    int getLength() {
-	return this->length;
-    }
+int VAO::getLength() {
+    return this->length;
+}
 
-    void destroy() {
-	glDeleteVertexArrays(1, &this->vao);
-    }
+void VAO::destroy() {
+    glDeleteVertexArrays(1, &this->vao);
+}
 
-    void bind() {
-	glBindVertexArray(this->vao);
-    }
+void VAO::bind() {
+    glBindVertexArray(this->vao);
+}
 
-    void unbind() {
-	glBindVertexArray(0);
-    }
+void VAO::unbind() {
+    glBindVertexArray(0);
+}
 
-    void draw() {
-	bind();
+void VAO::draw() {
+    bind();
 
-	glDrawArrays(GL_TRIANGLES, 0, this->length);
-	
-	unbind();
-    }
-protected:
-    GLuint vao;//айди VAO
-    int length;//кол-во вершин
-};
+    glDrawArrays(GL_TRIANGLES, 0, this->length);
+    
+    unbind();
+}

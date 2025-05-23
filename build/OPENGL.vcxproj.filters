@@ -4,6 +4,15 @@
     <ClCompile Include="E:\projects\opengl_cpp_test\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="E:\projects\opengl_cpp_test\src\vbo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\projects\opengl_cpp_test\src\vao.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\projects\opengl_cpp_test\src\circle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\projects\opengl_cpp_test\CMakeLists.txt" />

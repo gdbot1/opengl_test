@@ -255,15 +255,6 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 DOXYGEN_EXECUTABLE:FILEPATH=DOXYGEN_EXECUTABLE-NOTFOUND
 
 //Value Computed by CMake
-GLAD_BINARY_DIR:STATIC=E:/projects/opengl_cpp_test/build/libs/glad
-
-//Value Computed by CMake
-GLAD_IS_TOP_LEVEL:STATIC=OFF
-
-//Value Computed by CMake
-GLAD_SOURCE_DIR:STATIC=E:/projects/opengl_cpp_test/libs/glad
-
-//Value Computed by CMake
 GLFW_BINARY_DIR:STATIC=E:/projects/opengl_cpp_test/build/libs/glfw
 
 //Build the GLFW documentation

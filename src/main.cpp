@@ -4,7 +4,8 @@
 #include <string>
 #include <fstream>
 
-#include "vao.cpp"
+#include "vao.h"
+#include "circle.h"
 
 using namespace std;
 
@@ -68,8 +69,12 @@ int main () {
     
     auto color_vbo = make_shared<VBO>(colors, 3);
 
+    vector<shared_ptr<VBO>> vbos = {vertex_vbo, color_vbo};
+
     //vao
-    VAO vao({vertex_vbo, color_vbo}, vertex_vbo->getLength());
+    VAO vao(vbos, vertex_vbo->getLength());
+
+    Circle circle(0.5f, -0.5f, 0.5f, 16, 0.2f, 1, 0.5f);
     
     while (!glfwWindowShouldClose(window)) {
 	theta++;
@@ -77,6 +82,7 @@ int main () {
         glClear(GL_COLOR_BUFFER_BIT);
 
 	vao.draw();
+	circle.draw();
 
 	glfwPollEvents();
         glfwSwapBuffers(window);
