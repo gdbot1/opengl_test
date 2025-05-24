@@ -6,6 +6,7 @@
 
 #include "vao.h"
 #include "circle.h"
+#include "texture.h"
 
 using namespace std;
 
@@ -31,8 +32,6 @@ int main () {
 
     glfwMakeContextCurrent(window);
 
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
     if (!gladLoadGL()) {
         cout << "FATAL ERROR: glad not inited" << endl;
         return -1;
@@ -50,6 +49,20 @@ int main () {
     glUseProgram(program);
     
     float theta = 0;
+
+    cout << "load texture" << endl;
+
+    Texture texture("../textures/01.png");
+
+    cout << "texture loaded" << endl;
+
+    int sampler = 0;
+
+    texture.bindSampler(sampler);
+
+    int tex_uniform = glGetUniformLocation(program, "tex");
+
+    glUniform1i(tex_uniform, sampler);
 
     //vertex vbo
     vector<float> vertices = {
@@ -69,7 +82,16 @@ int main () {
     
     auto color_vbo = make_shared<VBO>(colors, 3);
 
-    vector<shared_ptr<VBO>> vbos = {vertex_vbo, color_vbo};
+    //color vbo
+    vector<float> texCords = {
+	0, 0,
+	0.5f, 1,
+	1, 0
+    };
+    
+    auto texCord_vbo = make_shared<VBO>(tex_cords, 2);
+
+    vector<shared_ptr<VBO>> vbos = {vertex_vbo, color_vbo, texCord_vbo};
 
     //vao
     VAO vao(vbos, vertex_vbo->getLength());
@@ -92,6 +114,8 @@ int main () {
 
     delete[] vertData;
     delete[] fragData;
+
+    cout << "hello world 1.3" << endl;
 
     return 0;
 }
