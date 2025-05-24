@@ -89,7 +89,7 @@ int main () {
 	1, 0
     };
     
-    auto texCord_vbo = make_shared<VBO>(tex_cords, 2);
+    auto texCord_vbo = make_shared<VBO>(texCords, 2);
 
     vector<shared_ptr<VBO>> vbos = {vertex_vbo, color_vbo, texCord_vbo};
 

@@ -68,7 +68,7 @@ Circle::Circle(float x, float y, float radius, int segments, float red, float gr
     auto color_vbo = make_shared<VBO>(colors, 3);
     auto texCord_vbo = make_shared<VBO>(texCords, 2);
 
-    vector<shared_ptr<VBO>> vbos = {vertex_vbo, color_vbo, texCords_vbo};
+    vector<shared_ptr<VBO>> vbos = {vertex_vbo, color_vbo, texCord_vbo};
 
     //super.vao
     VAO::vao = createVAO(vbos);
