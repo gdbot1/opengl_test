@@ -42,11 +42,16 @@ Circle::Circle(float x, float y, float radius, int segments, float red, float gr
 	vertices[i * 3 * 2 + 4] = next_x;
 	vertices[i * 3 * 2 + 5] = next_y;
 
-	float tex_x = (dif_x + 1) / 2;
-	float tex_y = (dif_y + 1) / 2;
+	float tex_radius = 1 / max(abs(dif_x), abs(dif_y));
+	float next_tex_radius = 1 / max(abs(next_dif_x), abs(next_dif_y));
 
-	float next_tex_x = (next_dif_x + 1) / 2;
-	float next_tex_y = (next_dif_y + 1) / 2;
+	cout << tex_radius << " so: " <<  (deltaTheta * i * 180 / PI::getPI()) << " and: c:" << dif_x << " s:" << dif_y << endl;
+
+	float tex_x = (dif_x * tex_radius + 1) / 2;
+	float tex_y = 1 - (dif_y * tex_radius + 1) / 2;
+
+	float next_tex_x = (next_dif_x * next_tex_radius + 1) / 2;
+	float next_tex_y = 1 - (next_dif_y * next_tex_radius + 1) / 2;
 
 	texCords[i * 3 * 2] = 0.5f;
 	texCords[i * 3 * 2 + 1] = 0.5f;

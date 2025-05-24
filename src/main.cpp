@@ -84,9 +84,9 @@ int main () {
 
     //color vbo
     vector<float> texCords = {
-	0, 0,
-	0.5f, 1,
-	1, 0
+	0, 1,
+	0.5f, 0,
+	1, 1
     };
     
     auto texCord_vbo = make_shared<VBO>(texCords, 2);
@@ -96,7 +96,7 @@ int main () {
     //vao
     VAO vao(vbos, vertex_vbo->getLength());
 
-    Circle circle(0.5f, -0.5f, 0.5f, 16, 0.2f, 1, 0.5f);
+    Circle circle(0.5f, -0.5f, 0.5f, 128, 1, 1, 1);
     
     while (!glfwWindowShouldClose(window)) {
 	theta++;

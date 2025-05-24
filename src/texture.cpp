@@ -37,8 +37,6 @@ void Texture::bindSampler(int sampler) {
     glActiveTexture(GL_TEXTURE0 + sampler);
 
     glBindTexture(GL_TEXTURE_2D, texture);
-
-    
 }
 
 GLuint Texture::getTexture() {
