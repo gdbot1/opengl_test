@@ -1,4 +1,9 @@
 #include <glad/glad.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
@@ -64,6 +69,11 @@ int main () {
 
     glUniform1i(tex_uniform, sampler);
 
+    //matrix
+    glm::mat4 camera_matrix = glm::mat4(1.0f);
+
+    int camera_matrix_uniform = glGetUniformLocation(program, "camera_matrix");
+
     //vertex vbo
     vector<float> vertices = {
 	-1, 0,
@@ -100,6 +110,10 @@ int main () {
     
     while (!glfwWindowShouldClose(window)) {
 	theta++;
+    
+	camera_matrix = glm::rotate(camera_matrix, glm::radians(1.0f), glm::vec3(1, 0, 0));
+
+	glUniformMatrix4fv(camera_matrix_uniform, 1, GL_FALSE, glm::value_ptr(camera_matrix));
 
         glClear(GL_COLOR_BUFFER_BIT);
 
